@@ -68,6 +68,6 @@ mini-blog/
 
 ## A short reflection
 
-The trickiest part was deciding where to use a class component vs a functional one — it would've been easier to just make everything functional, but I wanted Post to be a class component so I could actually justify it with the PureComponent optimization instead of picking randomly. Getting the "New!" badge and author-highlight logic to work cleanly also took a bit of trial and error, so I pulled that logic into small helper functions instead of cramming it all into the JSX.
+The trickiest part was deciding where to use a class component vs a functional one it would've been easier to just make everything functional, but I wanted Post to be a class component so I could actually justify it with the PureComponent optimization instead of picking randomly. Getting the "New!" badge and author-highlight logic to work cleanly also took a bit of trial and error, so I pulled that logic into small helper functions instead of cramming it all into the JSX.
 
-Overall this project helped me understand why typing things properly (like the Post interface) actually matters — it caught a few small mistakes early. If I kept working on this, I'd want to add a real "new post" form and maybe write some tests for the styling logic.
+Overall this project helped me understand why typing things properly (like the Post interface) actually matters it caught a few small mistakes early. If I kept working on this, I'd want to add a real "new post" form and maybe write some tests for the styling logic.
