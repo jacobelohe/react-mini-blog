@@ -1,17 +1,12 @@
 # Dev Insights — Mini Blog
 
-A small internal blog platform built for the "Dev Insights" scenario, using React, TypeScript, and Vite. Employees can browse a list of shared tips/updates rendered by reusable components.
+This is a small blog app I built for the "Dev Insights" project. It shows a list of short posts using React, TypeScript, and Vite.
 
-## Getting Started
+## How to run it
 
-This project was scaffolded with **Vite** (`react-ts` template) and lives in the [`mini-blog/`](mini-blog) directory.
+The app is inside the [`mini-blog/`](mini-blog) folder. It was made with **Vite** (react-ts template).
 
-### Prerequisites
-
-- Node.js (v18 or later recommended)
-- npm
-
-### Installation
+You need Node.js and npm installed first.
 
 ```bash
 git clone <this-repository-url>
@@ -19,35 +14,27 @@ cd react-mini-blog/mini-blog
 npm install
 ```
 
-### Running the app (development)
+Then to start it:
 
 ```bash
 npm run dev
 ```
 
-This starts the Vite dev server (with hot module replacement) — open the printed local URL (usually `http://localhost:5173`) in your browser.
+This opens a local dev server (usually `http://localhost:5173`). Open that link in your browser to see the app.
 
-### Building for production
+To build it for production:
 
 ```bash
 npm run build
 ```
 
-Type-checks the project with `tsc` and bundles it with Vite into `mini-blog/dist`.
-
-### Previewing the production build
-
-```bash
-npm run preview
-```
-
-### Linting
+To check the code style:
 
 ```bash
 npm run lint
 ```
 
-## Project Structure
+## What's inside
 
 ```
 mini-blog/
@@ -64,39 +51,23 @@ mini-blog/
     main.tsx
 ```
 
-## Design Decisions
+## Why I built it this way
 
-### Component Types
+**Components:** Header, PostList, and App are simple functional components since they don't need much state. Post is a class component instead, mainly so I could show I understand both styles, and it also let me use `PureComponent` on it for optimization.
 
-- **Header**, **PostList**, and **App** are **functional components**, since they hold little to no local state/lifecycle logic and functional components with hooks are the idiomatic default in modern React.
-- **Post** is implemented as a **class component** (extending `React.PureComponent`) instead of a functional one. This was a deliberate choice to demonstrate the class-based component syntax covered in Week 3, and to pair it directly with a relevant optimization technique: `PureComponent` automatically shallow-compares props and skips re-rendering `Post` when its `post` prop hasn't changed, which is a natural fit for a component rendered repeatedly inside a list.
+**Styling:** I used three ways to style things — a normal CSS file for the Header, styled-components for the PostList, and inline styles for the Post card. I used inline styles there because the styling changes depending on the post (like highlighting posts from "Admin", or showing a "New!" badge if the post was made in the last 24 hours).
 
-### Styling
+**Optimization:** Post uses `PureComponent` so it doesn't re-render unless its data actually changes. Header uses `React.memo` for the same reason. Each post in the list also gets a unique `key`.
 
-Two styling methods are used:
+**HOC:** I made a small `withLogger` component that just logs to the console when something mounts and unmounts. I used it on PostList.
 
-1. **External CSS** — `Header.css`, imported into `Header.tsx`, styles the site header/logo/nav.
-2. **CSS-in-JS (styled-components)** — `PostList.tsx` uses `styled-components` to style the list wrapper and heading.
-3. **Inline styles** — `Post.tsx` uses inline styles to implement conditional styling based on post data (see below), since the styling depends on runtime values per post.
+## Libraries used
 
-**Conditional styling** implemented in `Post.tsx`:
-- Posts authored by `"Admin"` get a highlighted background/border.
-- Posts with a `datePosted` within the last 24 hours display a green **"New!"** badge.
+- `styled-components` — for the CSS-in-JS styling
+- everything else is just the default React + TypeScript + Vite setup
 
-### Optimization & HOC
+## A short reflection
 
-- `Post` extends `React.PureComponent` to avoid unnecessary re-renders when its props haven't changed.
-- `Header` is wrapped in `React.memo` since it receives no props and never needs to re-render for unrelated parent updates.
-- Every item in `PostList` is rendered with a stable, unique `key={post.id}`.
-- `withLogger` is a Higher-Order Component (`src/hoc/withLogger.tsx`) that logs a console message when the wrapped component mounts and unmounts. It's applied to `PostList` (`export default withLogger(PostList)`).
+The trickiest part was deciding where to use a class component vs a functional one — it would've been easier to just make everything functional, but I wanted Post to be a class component so I could actually justify it with the PureComponent optimization instead of picking randomly. Getting the "New!" badge and author-highlight logic to work cleanly also took a bit of trial and error, so I pulled that logic into small helper functions instead of cramming it all into the JSX.
 
-## External Libraries Used
-
-- [`styled-components`](https://styled-components.com/) — CSS-in-JS styling for `PostList`.
-- Everything else (React, TypeScript, Vite tooling) comes from the standard `react-ts` Vite template.
-
-## Challenges & Reflection
-
-The main challenge was deciding where to draw the line between the two component paradigms — it would have been easy to make everything a functional component with hooks, but the assessment specifically asked for a justified choice, so `Post` became the class component since pairing it with `PureComponent` gave a concrete, meaningful reason for the choice rather than an arbitrary one. Getting the conditional "highlight by author" and "New!" badge logic to read cleanly inside inline styles (rather than sprawling across multiple CSS files) also took a couple of iterations — computing `isHighlighted` and `isNew` as small helper functions before returning JSX kept the render method readable.
-
-Working through this project reinforced how much component boundaries and typing decisions (the `Post` interface, prop typing) pay off once a "list of similar things" pattern shows up — TypeScript caught a couple of typos in prop names during development. Going further, I'd like to explore React Context or a small state library for managing an actual "add new post" form, plus writing tests for the conditional styling logic.
+Overall this project helped me understand why typing things properly (like the Post interface) actually matters — it caught a few small mistakes early. If I kept working on this, I'd want to add a real "new post" form and maybe write some tests for the styling logic.
